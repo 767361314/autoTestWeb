@@ -1,9 +1,13 @@
 package com.cd.autoTest.service;
 
+import java.security.MessageDigest;
 import java.util.List;
 
+import com.cd.autoTest.action.UserAction;
 import com.cd.autoTest.dao.UserDAO;
 import com.cd.autoTest.model.User;
+
+import sun.security.provider.MD5;
 
 public class UserService extends IService {
 	private UserDAO userDao = null;
@@ -23,6 +27,9 @@ public class UserService extends IService {
 
 	public int insertUser(User user) {
 		try {
+			String password = user.getPassword();
+			password = UserAction.MD5(password);
+			user.setPassword(password);
 			return userDao.insertUser(user);
 		} catch (Exception e) {
 			log.info(e.toString());

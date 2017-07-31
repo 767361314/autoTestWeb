@@ -31,6 +31,7 @@
 					str+= "</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class='glyphicon glyphicon-trash'  style='cursor:pointer;' onclick='deleteProject(this);'></span>";
 					str+= "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' value='manage/initGroup?projectId="+data.id+"'  class='link'>组管理</a>";
 					str+= "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' value='manage/initEnvironment?projectId="+data.id+"'  class='link'>测试环境</a>";
+					str+= "&nbsp;&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' value='manage/initTask?projectId="+data.id+"'  class='link'>任务管理</a>";
 					return str;
 				}
 						

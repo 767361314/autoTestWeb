@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+"-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cd.autoTest.dao.TaskDAO">
+	<resultMap type="Task" id="resultMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="time" column="time" />
+		<result property="projectId" column="projectId" />
+		<result property="userName" column="userName" />
+	</resultMap>
+	<select id="findTaskList" resultMap="resultMap">
+		select * from t_task t where 1=1 
+		<if test="projectId != null and '' != projectId">  
+            <![CDATA[  
+              AND t.projectId = #{projectId}  
+            ]]>  
+        </if>
+	</select>
+	<select id="findTaskListByProjectId" parameterType="Integer" resultMap="resultMap">
+		select * from t_task t where t.projectId=#{projectId}
+	</select>
+	<insert id="insertTask" parameterType="Task">
+		insert into t_task(name,projectId,username)
+		values(#{name},#{projectId},#{userName})
+	</insert>
+	<update id="updateTask" parameterType="Task">
+		update t_task set name=#{name} where id=#{id}
+	</update>
+	<select id="findTaskById" parameterType="Integer" resultMap="resultMap">
+		select t.* from t_task t where t.id=#{id}
+	</select>
+	<delete id="deleteTask" parameterType="Integer">
+		delete from t_task where id=#{id}
+	</delete>
+</mapper>  
+

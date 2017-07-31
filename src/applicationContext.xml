@@ -260,6 +260,7 @@
 		<property name="groupService" ref="groupService" />
 		<property name="categoryService" ref="categoryService" />
 		<property name="environmentService" ref="environmentService" />
+		<property name="taskService" ref="taskService" />		
 	</bean>
 	<bean id="strategyAction" class="com.cd.autoTest.action.StrategyAction">
 		<property name="strategyService" ref="strategyService" />
@@ -345,5 +346,13 @@
 	<bean id="projectAction" class="com.cd.autoTest.action.ProjectAction">
 		<property name="projectService" ref="projectService" />
 	</bean>
+	<bean id="taskMapDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口 -->
+		<property name="mapperInterface" value="com.cd.autoTest.dao.TaskDAO" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	<bean id="taskService" class="com.cd.autoTest.service.TaskService">
+		<property name="taskDao" ref="taskMapDao" />
+	</bean>		
 </beans>
 

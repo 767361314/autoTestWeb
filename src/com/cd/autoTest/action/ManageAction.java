@@ -1,19 +1,25 @@
 package com.cd.autoTest.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.cd.autoTest.model.Category;
 import com.cd.autoTest.model.Environment;
 import com.cd.autoTest.model.Group;
 import com.cd.autoTest.model.Project;
+import com.cd.autoTest.model.Task;
 import com.cd.autoTest.model.User;
 import com.cd.autoTest.service.CategoryService;
 import com.cd.autoTest.service.EnvironmentService;
 import com.cd.autoTest.service.GroupService;
 import com.cd.autoTest.service.ProjectService;
+import com.cd.autoTest.service.TaskService;
 import com.opensymphony.xwork2.Action;
 
 public class ManageAction extends BaseAction {
@@ -28,14 +34,80 @@ public class ManageAction extends BaseAction {
 	private int environmentId;
 	private int categoryId;
 	private int projectId;
-	
+	private TaskService taskService;
+	private List<Task> taskList;
+	private Task task;
+	private int taskId;
 	private String code;
 
 
 	
 
+	public String initTask() {
+		Task t =new Task();
+		t.setProjectId(projectId);
+		taskList = taskService.findTaskList(t);
+		return Action.SUCCESS;
+	}
+	public void findTaskListByProjectId(){
+		try {		
+		List<Task> taskList = taskService.findTaskListByProjectId(projectId);
+		JSONArray json = new JSONArray();
+		for(Task t : taskList){
+			JSONObject js = new JSONObject();
+			js.put("id", t.getId());
+			js.put("name", t.getName());
+			js.put("username", t.getUserName());
+			js.put("time", t.getTime());
+			json.put(js);
+			}
+			this.WriteJson(taskList.size(), json);		
+		} catch (JSONException e) {
+			log.info(e.toString());
+			throw new RuntimeException(e.toString());
+		}
+	}	
+	public void insertTask(){
+		try {
+			String userName = (String) request.getSession().getAttribute("userName");
+			task.setUserName(userName);
+			int i = taskService.insertTask(task);
+			this.WriteInteger(i);
+		} catch (Exception e) {
+			log.info(e.toString());
+			throw new RuntimeException(e.toString());
+		}
 
+	}
+	public void updateTask(){
+		try {
+			int i = taskService.updateTask(task);
+			this.WriteInteger(i);
+		} catch (Exception e) {
+			log.info(e.toString());
+			throw new RuntimeException(e.toString());
+		}
+	}
+	public void findTaskById(){
+		try {		
+			Task t = taskService.findTaskById(taskId);
+			JSONObject js = new JSONObject();
+			js.put("id", t.getId());
+			js.put("name", t.getName());
+			js.put("username", t.getUserName());
+			js.put("time", t.getTime());
+			this.WriteJson(js);		
+		} catch (JSONException e) {
+			log.info(e.toString());
+			throw new RuntimeException(e.toString());
+		}
+	}
+	public void deleteTask(){
+		int i = taskService.deleteTask(taskId);
+		this.WriteInteger(i);		
+	}
 	
+
 	public String initGroup() {
 		Group g = new Group();
 		g.setParentGroupId(-1);
@@ -43,7 +115,7 @@ public class ManageAction extends BaseAction {
 		groupList = groupService.findGroupList(g);
 		return Action.SUCCESS;
 	}
-
+	
 	public void findGroupListByProjectId() {
 		try {
 			List<Group> groupList = groupService.findGroupListByProjectId(projectId);
@@ -97,6 +169,7 @@ public class ManageAction extends BaseAction {
 			throw new RuntimeException(e.toString());
 		}
 	}
+
 	public void findGroupByCode(){
 		try {
 			Group g = groupService.findGroupByCode(code);
@@ -116,6 +189,7 @@ public class ManageAction extends BaseAction {
 		int i=groupService.deleteGroup(groupId);
 		this.WriteInteger(i);
 	}
+
 	public String initCategory() {
 		return Action.SUCCESS;
 	}
@@ -351,5 +425,30 @@ public class ManageAction extends BaseAction {
 	public void setProjectId(int projectId) {
 		this.projectId = projectId;
 	}
+	public TaskService getTaskService() {
+		return taskService;
+	}
+	public void setTaskService(TaskService taskService) {
+		this.taskService = taskService;
+	}
+	public List<Task> getTaskList() {
+		return taskList;
+	}
 
+	public Task getTask() {
+		return task;
+	}
+	public void setTask(Task task) {
+		this.task = task;
+	}
+	public int getTaskId() {
+		return taskId;
+	}
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+	public void setTaskList(List<Task> taskList) {
+		this.taskList = taskList;
+	}
+	
 }
